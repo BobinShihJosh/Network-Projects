@@ -1,4 +1,4 @@
-from part2.client import Client
+from client import Client
 import threading
 
 def client_thread(client):

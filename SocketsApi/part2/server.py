@@ -11,7 +11,7 @@ def run_protocol(message, client_ip, client_num):
     timeout = 3
     header_len = 12 
 
-    print("Stage A start, client num: ", client_num) 
+    print("Stage A start, client num#", client_num) 
     payload_len, psecret, step, student_num = unpack('>IIHH', message[0:12])
     payload = message[header_len:header_len+payload_len].decode()
     if payload != 'hello world' + '\0':
@@ -30,11 +30,11 @@ def run_protocol(message, client_ip, client_num):
     sock.settimeout(timeout)
     sock.sendto(response, client_ip)
     sock.close()
-    print("Stage A end, client num: ", client_num)
+    print("Stage A end, client num#", client_num)
 
 
 
-    print("Stage B start, client num: ", client_num)
+    print("Stage B start, client num#", client_num)
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.settimeout(timeout)
     sock.bind((ip, udp_port))
@@ -72,11 +72,11 @@ def run_protocol(message, client_ip, client_num):
         sock.sendto(response, client_ip)
         sock.close()
     udp_ports.remove(udp_port)
-    print("Stage B end, client num: ", client_num)
+    print("Stage B end, client num#", client_num)
 
 
 
-    print("Stage C start, client num: ", client_num)
+    print("Stage C start, client num#", client_num)
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((ip, tcp_port))
     sock.listen(1)
@@ -88,11 +88,11 @@ def run_protocol(message, client_ip, client_num):
     header = pack('>IIHH', 13, secretC, 2, student_id)
     message = header + pack('>III', num2, len2, secretC) + c.encode("ascii")
     connection.sendto(message, client_address)
-    print("Stage C end, client num: ", client_num)
+    print("Stage C end, client num#", client_num)
 
 
 
-    print("Stage D start, client num: ", client_num)
+    print("Stage D start, client num#", client_num)
     payloads_received = 0
     mess_len = len2 + header_len
     if len2%4 != 0:
@@ -114,8 +114,8 @@ def run_protocol(message, client_ip, client_num):
     connection.sendto(response, client_address)
     tcp_ports.remove(tcp_port)
     sock.close()
-    print("Stage D end, client num: ", client_num)
-    print("================== Complete ==================")
+    print("Stage D end, client num#", client_num)
+    print(f"================== Complete client #{client_num} ==================")
 
 ip ="127.0.0.1"
 udp_port = 12238
