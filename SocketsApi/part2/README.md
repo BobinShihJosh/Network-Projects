@@ -13,7 +13,7 @@ python3 client.py
 ```
 
 ## Test multi-client 
-Customzie number of clients in testMulticlient.py 
+OPTIONAL: Customzie number of clients in testMulticlient.py 
 
 Start the server by running 
 ```
