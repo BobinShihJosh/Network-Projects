@@ -1,5 +1,5 @@
 ## Group Members
-- Shih Bobin (1669835)
+- Shih Bobin (bos2)
 - Vic Lin (h82lin)
   
 ## How to compile and run
