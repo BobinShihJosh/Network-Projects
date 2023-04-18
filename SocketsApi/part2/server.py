@@ -26,23 +26,23 @@ def run_protocol(message, client_ip, client_num):
     header = pack('>IIHH', 16, secretA, 1, student_id)
     response = header + pack('>IIII', num, the_len, udp_port, secretA)
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.settimeout(timeout)
-    sock.sendto(response, client_ip)
-    sock.close()
+    sock1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock1.settimeout(timeout)
+    sock1.sendto(response, client_ip)
+    sock1.close()
     print("Stage A end, client num#", client_num)
 
 
 
     print("Stage B start, client num#", client_num)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.settimeout(timeout)
-    sock.bind((ip, udp_port))
+    sock2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock2.settimeout(timeout)
+    sock2.bind((ip, udp_port))
     packets_received = 0
     received_id = 0
     while packets_received < num:
          
-        message, client_ip = sock.recvfrom(buffer_len)
+        message, client_ip = sock2.recvfrom(buffer_len)
         payload_len, psecret, step, student_num, packet_id = unpack('>IIHHI', message[0:16])
         
         if psecret != secretA or step != 1 or student_num != student_id:
@@ -59,7 +59,7 @@ def run_protocol(message, client_ip, client_num):
             received_id += 1
             header = pack('>IIHH', 16, secretA, 1, 444)
             response = header + pack('>I', packet_id)
-            sock.sendto(response, client_ip)
+            sock2.sendto(response, client_ip)
 
     if packets_received == num:
         tcp_port = random.randint(20000, 65535)
@@ -69,18 +69,18 @@ def run_protocol(message, client_ip, client_num):
         secretB = random.randint(0, 4294967295)
         header = pack('>IIHH', 8, secretB, 2, student_id)
         response = header + pack('>II', tcp_port, secretB)
-        sock.sendto(response, client_ip)
-        sock.close()
+        sock3 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock3.bind((ip, tcp_port))
+        sock3.listen(5)
+        sock2.sendto(response, client_ip)
+        sock2.close()
     udp_ports.remove(udp_port)
     print("Stage B end, client num#", client_num)
 
 
 
     print("Stage C start, client num#", client_num)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind((ip, tcp_port))
-    sock.listen(1)
-    connection, client_address = sock.accept()
+    connection, client_address = sock3.accept()
     num2 = random.randint(1, 20)
     len2 = random.randint(1, 20)
     secretC = random.randint(0, 4294967295)
@@ -98,7 +98,7 @@ def run_protocol(message, client_ip, client_num):
     if len2%4 != 0:
         mess_len = len2 + (4-len2%4) + header_len
     while payloads_received < num2:
-        sock.settimeout(timeout)
+        sock3.settimeout(timeout)
         message = connection.recv(mess_len)
         payload_len, psecret, step, student_num = unpack('>IIHH', message[0:12])
         if psecret != secretC or step != 1 or student_num != student_id:
@@ -113,7 +113,7 @@ def run_protocol(message, client_ip, client_num):
     response = header + pack('>I', secretD)
     connection.sendto(response, client_address)
     tcp_ports.remove(tcp_port)
-    sock.close()
+    sock3.close()
     print("Stage D end, client num#", client_num)
     print(f"================== Complete client #{client_num} ==================")
 
