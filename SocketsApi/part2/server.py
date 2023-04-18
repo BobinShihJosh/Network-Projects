@@ -97,9 +97,9 @@ def run_protocol(message, client_ip, client_num):
     mess_len = len2 + header_len
     if len2%4 != 0:
         mess_len = len2 + (4-len2%4) + header_len
+    sock3.settimeout(timeout)
     while payloads_received < num2:
-        sock3.settimeout(timeout)
-        message = connection.recv(mess_len)
+        message = connection.recv(buffer_len)
         payload_len, psecret, step, student_num = unpack('>IIHH', message[0:12])
         if psecret != secretC or step != 1 or student_num != student_id:
             return
