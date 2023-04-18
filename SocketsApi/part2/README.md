@@ -1,6 +1,6 @@
 ## Group Members
 - Shih Bobin (1669835)
-- Vic Lin ()
+- Vic Lin (h82lin)
   
 ## How to compile and run
 Start the server by running 
