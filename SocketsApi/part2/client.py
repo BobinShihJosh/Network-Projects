@@ -12,7 +12,7 @@ class Client:
     def send_request(self):
         step_num = 1
         student_num = 835
-        initial_udp_portnum = 12238
+        initial_udp_portnum = 12239
 
         HEADERSIZE = 12
         server_hosts = ['attu2.cs.washington.edu', "127.0.0.1"]
