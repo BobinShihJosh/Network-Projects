@@ -75,20 +75,19 @@ class Part4Controller (object):
     msg = of.ofp_flow_mod(priority=10)
     msg.match.dl_type = 0x0800 # IPV4
     msg.match.nw_proto = 1 # ICMP
-    msg.match.nw_src = IPS["hnotrust"][0]   
+    msg.match.nw_src = IPS["hnotrust"][0]  # "172.16.10.100" 
     self.connection.send(msg)
 
     # hnotrust1 cannot send any IP traffic to serv1.
     msg = of.ofp_flow_mod(priority=9)
     msg.match.dl_type = 0x0800 # IPV4
-    msg.match.nw_src = IPS["hnotrust"][0]  
-    msg.match.nw_dst = IPS["serv1"][0]  
+    msg.match.nw_src = IPS["hnotrust"][0]  #"172.16.10.100"
+    msg.match.nw_dst = IPS["serv1"][0] #"10.0.4.10"
     self.connection.send(msg)
 
   def dcs31_setup(self):
     #put datacenter switch rules here 
     self.flood_all()
-
 
   #used in part 4 to handle individual ARP packets
   #not needed for part 3 (USE RULES!)
